@@ -10,11 +10,17 @@ public class RunningTrack implements IObstacle {
 
     @Override
     public EObstacle getType() {
-        return EObstacle.RunningTrack;
+        return EObstacle.RUNNING_TRACK;
     }
 
     @Override
     public int getValue() {
         return length;
+    }
+
+    @Override
+    public String toString() {
+        return "RunningTrack - " +
+                "length=" + length;
     }
 }

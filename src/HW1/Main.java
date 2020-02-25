@@ -38,17 +38,20 @@ public class Main {
          */
         for (int i = 0; i < notJustANumber; i++) {
             for (int j = 0; j < notJustANumber; j++) {
-                if (!runners[j].isRetired()){
-                    switch (obstacles[i].getType()){
-                        case Wall:
-                            System.out.print(runners[j] + " ");
-                            runners[j].jump(obstacles[i].getValue());
+                if (!runners[i].isRetired()){
+                    String RunnerAndObstacles = runners[i] + " " + obstacles[j] + " ";
+                    switch (obstacles[j].getType()){
+                        case WALL:
+                            System.out.print(RunnerAndObstacles);
+                            runners[i].jump(obstacles[j].getValue());
                             break;
-                        case RunningTrack:
-                            System.out.print(runners[j] + " ");
-                            runners[j].running(obstacles[i].getValue());
+                        case RUNNING_TRACK:
+                            System.out.print(RunnerAndObstacles);
+                            runners[i].running(obstacles[j].getValue());
                             break;
                     }
+                } else {
+                    break;
                 }
             }
         }

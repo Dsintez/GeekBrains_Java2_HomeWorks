@@ -10,11 +10,17 @@ public class Wall implements IObstacle {
 
     @Override
     public EObstacle getType() {
-        return EObstacle.Wall;
+        return EObstacle.WALL;
     }
 
     @Override
     public int getValue() {
         return height;
+    }
+
+    @Override
+    public String toString() {
+        return "Wall - " +
+                "height=" + height;
     }
 }
