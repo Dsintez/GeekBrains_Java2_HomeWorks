@@ -6,13 +6,19 @@ import java.util.Set;
 import java.util.TreeSet;
 
 public class Contacts {
-    private Map<String, String> contacts = new HashMap<>();
+    private Map<String, Set<String>> contactsByName = new HashMap<>();
 
     public void add(String name, String number) throws RuntimeException {
+        validNumber(name, number);
+        Set<String> phones = get(name);
+        phones.add(number);
+    }
+
+    private void validNumber(String name, String number) {
         char[] check = number.toCharArray();
         if (check.length == 11) {
             for (char c : check) {
-                if (!isNumber(c)) {
+                if (!Character.isDigit(c)) {
                     throw new RuntimeException(number + " incorrect");
                 }
             }
@@ -21,7 +27,7 @@ public class Contacts {
                 throw new RuntimeException(number + " incorrect");
             }
             for (int i = 1; i < check.length; i++) {
-                if (!isNumber(check[i])) {
+                if (!Character.isDigit(check[i])) {
                     throw new RuntimeException(number + " incorrect");
                 }
             }
@@ -31,35 +37,14 @@ public class Contacts {
         if (name.length() < 2) {
             throw new RuntimeException(name + " incorrect");
         }
-
-        contacts.put(number, name);
     }
 
     public Set<String > get(String name){
-        Set<String> numbers = new TreeSet<>();
-        for (Map.Entry<String, String> element : contacts.entrySet()) {
-            if (element.getValue().equals(name)){
-                numbers.add(element.getKey());
-            }
+        Set<String> phones;
+        phones = contactsByName.getOrDefault(name, new TreeSet<>());
+        if (phones.isEmpty()){
+            contactsByName.put(name, phones);
         }
-        return numbers;
-    }
-
-    private boolean isNumber(char symbol) {
-        switch (symbol) {
-            case 48:
-            case 49:
-            case 50:
-            case 51:
-            case 52:
-            case 53:
-            case 54:
-            case 55:
-            case 56:
-            case 57: {
-                return true;
-            }
-        }
-        return false;
+        return phones;
     }
 }

@@ -1,51 +1,39 @@
 package HW3;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class Main {
     private static Contacts contacts = new Contacts();
+    private static String[] randomWords = {
+            "glow",
+            "runner",
+            "flexible",
+            "differ",
+            "glow",
+            "glow",
+            "flexible",
+            "drain",
+            "bring",
+            "flexible",
+            "glow",
+            "ally",
+            "flexible",
+            "countryside",
+            "category",
+            "wolf",
+            "wolf"
+    };
 
     public static void main(String[] args) {
-        List<String> words = new ArrayList<String>();
-        {
-            words.add("rare");
-            words.add("permanent");
-            words.add("sweat");
-            words.add("smart");
-            words.add("feast");
-            words.add("pleasure");
-            words.add("conglomerate");
-            words.add("polish");
-            words.add("dairy");
-            words.add("sailor");
-            words.add("smart");
-            words.add("feast");
-            words.add("pleasure");
-            words.add("rare");
-            words.add("permanent");
-        } //Добовляем строки
+        Map<String, Integer> words = new TreeMap<>();
 
-        String task1_2 = "";
-        String task1_3 = "";
-        words.sort(String::compareTo);
-        //Первое задание
-        int repeat = 1;
-        String previous = words.get(0);
-        for (int i = 1; i < words.size(); i++) {
-            if (previous.equals(words.get(i))) {
-                repeat++;
-            } else {
-                task1_2 += previous + "\n";
-                task1_3 += "Слово " + previous + " встречается " + repeat + "\n";
-                previous = words.get(i);
-                repeat = 1;
-            }
+        for (String word : randomWords) {
+            words.merge(word, 1, Integer::sum);
         }
-        task1_2 += previous + "\n";
-        task1_3 += "Слово " + previous + " встречается " + repeat + "\n";
 
-        System.out.println(task1_2 + "----------\n" + task1_3);
+        for (Map.Entry<String, Integer> wordPlus : words.entrySet()) {
+            System.out.println("Слово " + wordPlus.getKey() + " встречается " + wordPlus.getValue() + ";");
+        }
 
         //Второе задание
         add("Дмитрий", "+78005553535");
