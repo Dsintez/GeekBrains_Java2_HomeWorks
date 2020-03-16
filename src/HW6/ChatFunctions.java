@@ -4,6 +4,7 @@ import java.io.*;
 import java.net.Socket;
 
 public class ChatFunctions {
+    public static int DEFAULT_PORT = 8133;
     public static void waitMessage(Socket socket){
         try {
             DataInputStream in = new DataInputStream(socket.getInputStream());
@@ -17,7 +18,7 @@ public class ChatFunctions {
         }
     }
 
-    public static void sendMessage(Socket socket){
+    public static void sendMessage(Socket socket, String nik){
         try {
             DataOutputStream out = new DataOutputStream(socket.getOutputStream());
             BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
@@ -28,7 +29,7 @@ public class ChatFunctions {
                     out.writeUTF("/end");
                     out.close();
                 }
-                out.writeUTF(message);
+                out.writeUTF(nik + ": " + message);
             }
         } catch (IOException e) {
             System.out.println("Не в сети");
