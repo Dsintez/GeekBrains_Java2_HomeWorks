@@ -1,5 +1,6 @@
 package ru.geekbrains.java2.server.auth;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -17,7 +18,7 @@ public class BaseAuthService implements AuthService {
         }
     }
 
-    private static final List<UserData> USER_DATA = List.of(
+    private static final List<UserData> USER_DATA = Arrays.asList(
             new UserData("login1", "pass1", "username1"),
             new UserData("login2", "pass2", "username2"),
             new UserData("login3", "pass3", "username3")

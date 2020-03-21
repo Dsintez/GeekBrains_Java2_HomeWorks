@@ -48,6 +48,13 @@ public class NetworkServer {
         return authService;
     }
 
+    public synchronized void unicastMessage(String nicknameRecipient, String message) throws IOException {
+        for (ClientHandler client : clients) {
+            if (client.getNickname().equals(nicknameRecipient)) {
+                client.sendMessage(message);
+            }
+        }
+    }
     public synchronized void broadcastMessage(String message, ClientHandler owner) throws IOException {
         for (ClientHandler client : clients) {
             if (client != owner) {
@@ -55,11 +62,9 @@ public class NetworkServer {
             }
         }
     }
-
     public synchronized void subscribe(ClientHandler clientHandler) {
         clients.add(clientHandler);
     }
-
     public synchronized void unsubscribe(ClientHandler clientHandler) {
         clients.remove(clientHandler);
     }
