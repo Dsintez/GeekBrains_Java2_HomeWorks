@@ -1,5 +1,6 @@
 package ru.geekbrains.java2.client.controllers;
 
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -7,6 +8,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseDragEvent;
 import javafx.scene.paint.Color;
 import ru.geekbrains.java2.client.ClientApp;
 import ru.geekbrains.java2.client.Connection;
@@ -27,7 +31,7 @@ public class AuthController implements Initializable {
 
     private boolean connect = false;
 
-    public void authorize(ActionEvent actionEvent) {
+    public void authorize() {
         if (!connect) return;
         Connection connection = new Connection(loginField.getText(), passwordField.getText());
         String message = connection.auth();
@@ -52,6 +56,13 @@ public class AuthController implements Initializable {
             errorLabel.setTextFill(Color.RED);
             errorLabel.setText("Нет соединения с сервером");
             connect = false;
+        }
+    }
+
+    public void pressEnter(KeyEvent keyEvent) {
+        if ("".equals(loginField.getText()) || "".equals(passwordField.getText())) return;
+        if (keyEvent.getCode().equals(KeyCode.ENTER)) {
+            authorize();
         }
     }
 }
