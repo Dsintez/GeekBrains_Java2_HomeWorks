@@ -17,6 +17,10 @@ public class ClientHandler {
 
     private String nickname;
 
+    public String getNickname() {
+        return nickname;
+    }
+
     public ClientHandler(NetworkServer networkServer, Socket socket) {
         this.networkServer = networkServer;
         this.clientSocket = socket;
@@ -62,6 +66,14 @@ public class ClientHandler {
             System.out.printf("От %s: %s%n", nickname, message);
             if ("/end".equals(message)) {
                 return;
+            }
+            // "/w nickname message"
+            if (message.startsWith("/w")) {
+                String[] messageParts = message.split("\\s+", 3);
+                String nicknameRecipient = messageParts[1];
+                message = nickname + ": " + messageParts[2];
+                networkServer.unicastMessage(nicknameRecipient, message);
+                continue;
             }
             networkServer.broadcastMessage(nickname + ": " + message, this);
         }
