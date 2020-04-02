@@ -5,21 +5,26 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
 <AnchorPane prefHeight="270.0" prefWidth="450.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.geekbrains.java2.client.controllers.AuthController">
    <children>
-      <ImageView fx:id="logoAuth" fitHeight="100.0" fitWidth="420.0" layoutX="14.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
+      <ImageView fitHeight="100.0" fitWidth="420.0" layoutX="14.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
          <viewport>
             <Rectangle2D />
          </viewport>
+         <image>
+            <Image url="@logo.png" />
+         </image>
       </ImageView>
       <Label layoutX="15.0" layoutY="125.0" prefHeight="21.0" prefWidth="66.0" text="Логин" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="125.0" />
       <TextField fx:id="loginField" layoutX="104.0" layoutY="120.0" onKeyPressed="#pressEnter" prefHeight="31.0" prefWidth="313.0" promptText="login" AnchorPane.leftAnchor="120.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="120.0" />
       <PasswordField fx:id="passwordField" layoutX="121.0" layoutY="162.0" onKeyPressed="#pressEnter" prefHeight="31.0" prefWidth="315.0" promptText="password" AnchorPane.leftAnchor="120.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="160.0" />
       <Label layoutX="15.0" layoutY="165.0" text="Пароль" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="165.0" />
-      <Button layoutX="193.0" layoutY="205.0" mnemonicParsing="false" onAction="#authorize" text="Авторизоваться" AnchorPane.leftAnchor="120.0" AnchorPane.rightAnchor="120.0" AnchorPane.topAnchor="205.0" />
+      <Button layoutX="193.0" layoutY="205.0" mnemonicParsing="false" onAction="#authorize" text="Авторизоваться" AnchorPane.leftAnchor="120.0" AnchorPane.rightAnchor="60.0" AnchorPane.topAnchor="205.0" />
       <Label fx:id="errorLabel" layoutX="14.0" layoutY="265.0" prefHeight="20.0" prefWidth="420.0" textFill="#ff2626" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" />
+      <Button layoutX="370.0" layoutY="205.0" mnemonicParsing="false" onAction="#reConnect" prefHeight="31.0" prefWidth="35.0" text="⟲" AnchorPane.rightAnchor="15.0" />
    </children>
 </AnchorPane>

@@ -80,6 +80,25 @@ public class ClientHandler {
     }
 
     private void authentication() throws IOException {
+        Thread sleep = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    long timeStart = System.currentTimeMillis();
+                    while (true) {
+                        long timePassed = System.currentTimeMillis() - timeStart;
+                        if (timePassed >= 72000) break;
+                        Thread.sleep(5999);
+                    }
+                    clientSocket.close();
+                } catch (InterruptedException e) {
+                    System.out.printf("%s успешно авторизовался%n", nickname);;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        sleep.start();
         while (true) {
             String message = in.readUTF();
             // "/auth login password"
@@ -95,6 +114,7 @@ public class ClientHandler {
                     networkServer.broadcastMessage(nickname + " зашел в чат!", this);
                     sendMessage("/auth " + nickname);
                     networkServer.subscribe(this);
+                    sleep.interrupt();
                     break;
                 }
             }
