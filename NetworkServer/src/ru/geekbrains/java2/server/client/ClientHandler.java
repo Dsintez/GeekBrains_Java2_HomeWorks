@@ -84,12 +84,7 @@ public class ClientHandler {
             @Override
             public void run() {
                 try {
-                    long timeStart = System.currentTimeMillis();
-                    while (true) {
-                        long timePassed = System.currentTimeMillis() - timeStart;
-                        if (timePassed >= 72000) break;
-                        Thread.sleep(5999);
-                    }
+                    Thread.sleep(72000);
                     clientSocket.close();
                 } catch (InterruptedException e) {
                     System.out.printf("%s успешно авторизовался%n", nickname);;
