@@ -1,6 +1,7 @@
 package ru.geekbrains.java2.server.client;
 
 import ru.geekbrains.java2.server.NetworkServer;
+import ru.geekbrains.java2.server.auth.DBAuthService;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -74,6 +75,15 @@ public class ClientHandler {
                 message = nickname + ": " + messageParts[2];
                 networkServer.unicastMessage(nicknameRecipient, message);
                 continue;
+            }
+            // "/chname login newNickname"
+            if (message.startsWith("/chname")) {
+                String[] messageParts = message.split("\\s+", 3);
+                message = nickname + " изменил ник на ";
+                String login = messageParts[1];
+                nickname = messageParts[2];
+                DBAuthService.connectDB.changeNickname(login, nickname);
+                message += nickname;
             }
             networkServer.broadcastMessage(nickname + ": " + message, this);
         }
