@@ -1,26 +1,24 @@
 package ru.geekbrains.java2.server.auth;
 
-import ru.geekbrains.java2.server.database.ConnectDB;
-import ru.geekbrains.java2.server.database.SQLite;
+import ru.geekbrains.java2.server.database.ConnectSQLite;
 
 public class DBAuthService implements AuthService {
-    public static ConnectDB connectDB;
 
     @Override
     public String getUsernameByLoginAndPassword(String login, String password) {
-        return connectDB.getUsernameByLoginAndPassword(login, password);
+        return ConnectSQLite.getUsernameByLoginAndPassword(login, password);
     }
 
     @Override
     public void start() {
-        connectDB = new SQLite();
+        ConnectSQLite.start();
         System.out.println("Сервис аутентификации запущен");
     }
 
     @Override
     public void stop() {
         try {
-            connectDB.close();
+            ConnectSQLite.close();
             System.out.println("Сервис аутентификации оставлен");
         } catch (Exception e) {
             e.printStackTrace();

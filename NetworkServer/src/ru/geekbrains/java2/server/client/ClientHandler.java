@@ -1,7 +1,7 @@
 package ru.geekbrains.java2.server.client;
 
 import ru.geekbrains.java2.server.NetworkServer;
-import ru.geekbrains.java2.server.auth.DBAuthService;
+import ru.geekbrains.java2.server.database.ConnectSQLite;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -17,6 +17,8 @@ public class ClientHandler {
     private DataOutputStream out;
 
     private String nickname;
+
+    private static String rxAllSpace = "\\s+";
 
     public String getNickname() {
         return nickname;
@@ -64,13 +66,14 @@ public class ClientHandler {
     private void readMessages() throws IOException {
         while (true) {
             String message = in.readUTF();
+            message = ConnectSQLite.checkMessageForCensorship(message);
             System.out.printf("От %s: %s%n", nickname, message);
             if ("/end".equals(message)) {
                 return;
             }
             // "/w nickname message"
             if (message.startsWith("/w")) {
-                String[] messageParts = message.split("\\s+", 3);
+                String[] messageParts = message.split(rxAllSpace, 3);
                 String nicknameRecipient = messageParts[1];
                 message = nickname + ": " + messageParts[2];
                 networkServer.unicastMessage(nicknameRecipient, message);
@@ -78,11 +81,11 @@ public class ClientHandler {
             }
             // "/chname login newNickname"
             if (message.startsWith("/chname")) {
-                String[] messageParts = message.split("\\s+", 3);
+                String[] messageParts = message.split(rxAllSpace, 3);
                 message = nickname + " изменил ник на ";
                 String login = messageParts[1];
                 nickname = messageParts[2];
-                DBAuthService.connectDB.changeNickname(login, nickname);
+                ConnectSQLite.changeNickname(login, nickname);
                 message += nickname;
             }
             networkServer.broadcastMessage(nickname + ": " + message, this);

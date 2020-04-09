@@ -55,6 +55,18 @@ public class NetworkServer {
             }
         }
     }
+
+    public String[] getContacts(String recipient) {
+        final String[] contacts = new String[clients.size() - 1];
+        int counter = 0;
+        for (ClientHandler client : clients) {
+            final String nickname = client.getNickname();
+            if (recipient.equals(nickname))
+            contacts[counter] = nickname;
+        }
+        return contacts;
+    }
+
     public synchronized void broadcastMessage(String message, ClientHandler owner) throws IOException {
         for (ClientHandler client : clients) {
             if (client != owner) {
@@ -62,9 +74,11 @@ public class NetworkServer {
             }
         }
     }
+
     public synchronized void subscribe(ClientHandler clientHandler) {
         clients.add(clientHandler);
     }
+
     public synchronized void unsubscribe(ClientHandler clientHandler) {
         clients.remove(clientHandler);
     }
