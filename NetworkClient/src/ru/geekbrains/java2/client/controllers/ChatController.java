@@ -25,9 +25,9 @@ public class ChatController implements Initializable {
     private String user;
     private ObservableList<String> contacts = FXCollections.observableArrayList(
             "All",
-            "username1",
-            "username2",
-            "username3"
+            "hardCase",
+            "zaichik",
+            "petryha"
     );
 
     public void sendMessage() {

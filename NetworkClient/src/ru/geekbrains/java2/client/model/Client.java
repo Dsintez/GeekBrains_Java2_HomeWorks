@@ -1,7 +1,6 @@
 package ru.geekbrains.java2.client.model;
 
 import javafx.application.Platform;
-import ru.geekbrains.java2.client.ClientApp;
 import ru.geekbrains.java2.client.controllers.ChatController;
 
 import java.io.DataInputStream;
@@ -10,6 +9,7 @@ import java.io.IOException;
 import java.net.Socket;
 
 public class Client implements AutoCloseable{
+    private static final int NUMBER_OF_UPLOADED_MESSAGES = 100;
     private static final int DEFAULT_PORT = 8189;
     private static final String DEFAULT_IP = "localhost";
     private static Socket socket;
@@ -52,6 +52,8 @@ public class Client implements AutoCloseable{
     }
 
     public void startChat() {
+        chatController.getMessagesList().getItems().addAll(LoadingFiles.loadHistoryMessage(username, NUMBER_OF_UPLOADED_MESSAGES));
+        chatController.getContactsList().getItems().addAll();
         try {
             in = new DataInputStream(socket.getInputStream());
             out = new DataOutputStream(socket.getOutputStream());
@@ -64,6 +66,7 @@ public class Client implements AutoCloseable{
                 try {
                     while (true) {
                         String message = in.readUTF();
+                        LoadingFiles.saveMessage(username, message);
                         Platform.runLater(new Runnable() {
                             @Override
                             public void run() {
@@ -80,10 +83,13 @@ public class Client implements AutoCloseable{
     }
 
     public void sendMessage(String message, String user) {
+        final String preFormat = "Я: %s --to %s--";
         try {
             if (!user.equals("All")) {
+                LoadingFiles.saveMessage(username, String.format(preFormat, message, user));
                 out.writeUTF(String.format("/w %s %s", user, message));
             } else {
+                LoadingFiles.saveMessage(username, String.format(preFormat, message, user));
                 out.writeUTF(message);
             }
         } catch (IOException e) {
