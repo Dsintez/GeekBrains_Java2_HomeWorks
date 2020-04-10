@@ -7,8 +7,12 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class ClientHandler {
+
+    private ExecutorService executorService;
 
     private final NetworkServer networkServer;
     private final Socket clientSocket;
@@ -32,11 +36,12 @@ public class ClientHandler {
     }
 
     private void doHandle(Socket socket) {
+        executorService = Executors.newFixedThreadPool(1);
         try {
             in = new DataInputStream(socket.getInputStream());
             out = new DataOutputStream(socket.getOutputStream());
 
-            new Thread(() -> {
+            executorService.execute(new Thread(() -> {
                 try {
                     authentication();
                     readMessages();
@@ -45,7 +50,7 @@ public class ClientHandler {
                 } finally {
                     closeConnection();
                 }
-            }).start();
+            }));
 
         } catch (IOException e) {
             e.printStackTrace();
