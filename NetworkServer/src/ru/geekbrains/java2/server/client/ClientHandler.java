@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.logging.Level;
 
 public class ClientHandler {
 
@@ -21,6 +22,7 @@ public class ClientHandler {
     private DataOutputStream out;
 
     private String nickname;
+    private String login;
 
     private static String rxAllSpace = "\\s+";
 
@@ -48,7 +50,9 @@ public class ClientHandler {
                     authentication();
                     readMessages();
                 } catch (IOException e) {
-                    System.out.println("Соединение с клиентом " + nickname + " было закрыто!");
+                    final String msg = "Соединение с клиентом " + nickname + " было закрыто!";
+                    System.out.println(msg);
+                    networkServer.LOGGER.log(Level.INFO, msg);
                 } finally {
                     closeConnection();
                 }
@@ -64,6 +68,7 @@ public class ClientHandler {
         try {
             clientSocket.close();
         } catch (IOException e) {
+            networkServer.LOGGER.log(Level.WARNING, "Ошибка", e);
             e.printStackTrace();
         }
     }
@@ -82,6 +87,7 @@ public class ClientHandler {
                 String nicknameRecipient = messageParts[1];
                 message = nickname + ": " + messageParts[2];
                 networkServer.unicastMessage(nicknameRecipient, message);
+                networkServer.LOGGER.log(Level.INFO, String.format("Пользователь с логином %s отправил сообщение: %s", login, message));
                 continue;
             }
             // "/chname login newNickname"
@@ -92,6 +98,7 @@ public class ClientHandler {
                 nickname = messageParts[2];
                 ConnectSQLite.changeNickname(login, nickname);
                 message += nickname;
+                networkServer.LOGGER.log(Level.INFO, message);
             }
             networkServer.broadcastMessage(nickname + ": " + message, this);
         }
@@ -105,7 +112,8 @@ public class ClientHandler {
                     Thread.sleep(72000);
                     clientSocket.close();
                 } catch (InterruptedException e) {
-                    System.out.printf("%s успешно авторизовался%n", nickname);;
+                    System.out.printf("%s успешно авторизовался%n", nickname);
+                    networkServer.LOGGER.log(Level.INFO, String.format("%s успешно авторизовался%n", nickname));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -122,8 +130,10 @@ public class ClientHandler {
                 String username = networkServer.getAuthService().getUsernameByLoginAndPassword(login, password);
                 if (username == null) {
                     sendMessage("Отсутствует учетная запись по данному логину и паролю!");
+                    networkServer.LOGGER.log(Level.INFO, String.format("Неоудачная попытка авторизации с логином %s и паролем %s", login, password));
                 } else {
                     nickname = username;
+                    this.login = login;
                     networkServer.broadcastMessage(nickname + " зашел в чат!", this);
                     sendMessage("/auth " + nickname);
                     networkServer.subscribe(this);
