@@ -9,14 +9,25 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.*;
 
 public class NetworkServer {
 
     private final int port;
     private final List<ClientHandler> clients = new ArrayList<>();
     private final AuthService authService;
+    public final Logger LOGGER;
 
     public NetworkServer(int port) {
+        this.LOGGER = Logger.getLogger(NetworkServer.class.getName());
+        try {
+            Handler handler = new FileHandler("Log.xml");
+            handler.setFormatter(new SimpleFormatter());
+            LOGGER.addHandler(handler);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         this.port = port;
         this.authService = new DBAuthService();
     }
@@ -24,15 +35,18 @@ public class NetworkServer {
     public void start() {
         try (ServerSocket serverSocket = new ServerSocket(port)) {
             System.out.println("Сервер был успешно запущен на порту " + port);
+            LOGGER.log(Level.INFO, "Сервер был успешно запущен на порту " + port);
             authService.start();
             while (true) {
                 System.out.println("Ожидание клиентского подключения...");
                 Socket clientSocket = serverSocket.accept();
                 System.out.println("Клиент подлючился");
+                LOGGER.log(Level.INFO, "Клиент подлючился");
                 createClientHandler(clientSocket);
             }
         } catch (IOException e) {
             System.out.println("Ошибка при работе сервера");
+            LOGGER.log(Level.WARNING, "Ошибка при работе сервера", e);
             e.printStackTrace();
         } finally {
             authService.stop();
